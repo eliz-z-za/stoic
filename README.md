@@ -53,13 +53,4 @@ curl -X POST "http://localhost:8000/entries" \
 curl http://localhost:8000/entries
 ```
 
-## 🛠 Технологии
-
-- FastAPI
-- Uvicorn
-- Pydantic
-
-## 📝 Лицензия
-
-MIT
 
