@@ -141,3 +141,9 @@ def mood_stats(
             {"date": "2025-10-20", "mood": "sad", "topics": ["job"]},
         ]
     )
+
+if __name__ == "__main__":
+    import os
+    import uvicorn
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run("main:app", host="0.0.0.0", port=port)
