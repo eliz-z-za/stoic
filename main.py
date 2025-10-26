@@ -120,7 +120,7 @@ def mood_stats(
     period: str = Query(
         default="week",
         description="Период для анализа (week, month, year)",
-        example="week"
+        examples=["week", "month", "year"]
     )
 ):
     """
