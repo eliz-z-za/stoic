@@ -53,4 +53,20 @@ curl -X POST "http://localhost:8000/entries" \
 curl http://localhost:8000/entries
 ```
 
+## Деплой на Railway
+
+Проект готов к деплою на Railway:
+
+1. Подключи репозиторий к Railway
+2. Railway автоматически определит команду запуска из `Procfile`
+3. Сервис будет доступен на предоставленном Railway URL
+
+Railway автоматически установит все зависимости и запустит сервер.
+
+## Технологии
+
+- FastAPI
+- Uvicorn
+- Pydantic
+
 
