@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Body, Query
+from fastapi import FastAPI, Body, Query, HTTPException, Path
 from pydantic import BaseModel
 from typing import List, Optional
 
@@ -57,6 +57,7 @@ def read_root():
         "endpoints": {
             "docs": "/docs",
             "entries": "/entries",
+            "entry_by_id": "/entries/{entry_id}",
             "analytics": "/analytics/mood"
         }
     }
@@ -90,6 +91,58 @@ def add_entry(entry: DiaryEntry):
         stoic_comment=stoic_comment,
         stoic_quote=stoic_quote
     )
+
+@app.get(
+    "/entries/{entry_id}",
+    response_model=DiaryEntry,
+    summary="Получить запись по ID",
+    description="Возвращает конкретную запись из дневника по её идентификатору",
+    response_description="Запись с указанным ID",
+    tags=["Записи"]
+)
+def get_entry(
+    entry_id: int = Path(description="ID записи для получения", example=1)
+):
+    """
+    Получает конкретную запись по ID.
+    
+    **Параметры:**
+    - **entry_id**: уникальный идентификатор записи
+    
+    **Возвращает:**
+    - Запись с указанным ID, если найдена
+    - 404 ошибку, если запись не найдена
+    """
+    for entry in db:
+        if entry.id == entry_id:
+            return entry
+    raise HTTPException(status_code=404, detail=f"Запись с ID {entry_id} не найдена")
+
+@app.delete(
+    "/entries/{entry_id}",
+    summary="Удалить запись",
+    description="Удаляет запись из дневника по её идентификатору",
+    response_description="Подтверждение удаления",
+    tags=["Записи"]
+)
+def delete_entry(
+    entry_id: int = Path(description="ID записи для удаления", example=1)
+):
+    """
+    Удаляет запись из дневника.
+    
+    **Параметры:**
+    - **entry_id**: уникальный идентификатор записи для удаления
+    
+    **Возвращает:**
+    - Сообщение об успешном удалении
+    - 404 ошибку, если запись не найдена
+    """
+    for i, entry in enumerate(db):
+        if entry.id == entry_id:
+            db.pop(i)
+            return {"message": f"Запись с ID {entry_id} успешно удалена", "deleted_entry": entry}
+    raise HTTPException(status_code=404, detail=f"Запись с ID {entry_id} не найдена")
 
 @app.get(
     "/entries",
